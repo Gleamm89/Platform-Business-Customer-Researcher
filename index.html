@@ -1,1 +1,725 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VAT / Business Customer Capture — Platform Validator (POC)</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --soft:#f9fafb;
+      --btn:#111827;
+      --btnText:#ffffff;
+      --good:#065f46;
+      --bad:#991b1b;
+      --warn:#92400e;
+      --chip:#eef2ff;
+      --chipText:#3730a3;
+      --shadow: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
+      --radius: 14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:var(--sans);
+      line-height:1.35;
+    }
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 18px 64px;
+    }
+    header{
+      padding: 8px 0 14px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 18px;
+    }
+    h1{
+      font-size: 20px;
+      margin: 0 0 6px;
+      letter-spacing: .2px;
+    }
+    .sub{
+      color:var(--muted);
+      font-size: 13px;
+      margin:0;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+    @media (min-width: 860px){
+      .grid{ grid-template-columns: 1.1fr .9fr; }
+    }
+    .card{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .card h2{
+      font-size: 14px;
+      margin: 0 0 10px;
+    }
+    .hint{
+      margin: 6px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .row{
+      display:flex;
+      gap: 10px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+    label{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 6px;
+    }
+    input[type="text"], input[type="url"], select, textarea{
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      border-radius: 12px;
+      padding: 10px 11px;
+      font-size: 14px;
+      outline: none;
+    }
+    textarea{
+      min-height: 92px;
+      resize: vertical;
+      font-family: var(--mono);
+      font-size: 12px;
+      background: #fbfbff;
+    }
+    input:focus, select:focus, textarea:focus{
+      border-color:#c7d2fe;
+      box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+      background:#fff;
+    }
+    .col{
+      flex: 1 1 240px;
+      min-width: 240px;
+    }
+    .col.small{
+      flex: 0 1 170px;
+      min-width: 170px;
+    }
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      align-items:center;
+    }
+    button{
+      border:1px solid var(--btn);
+      background: var(--btn);
+      color: var(--btnText);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 13px;
+      cursor:pointer;
+      letter-spacing:.2px;
+    }
+    button.secondary{
+      border:1px solid var(--line);
+      background:#fff;
+      color: var(--text);
+    }
+    button:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+    .statusbar{
+      margin-top: 10px;
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+      border-top: 1px dashed var(--line);
+      padding-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background:#fff;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .pill strong{ color: var(--text); font-weight: 600; }
+    .pill.good{ border-color: rgba(6,95,70,.25); background: rgba(6,95,70,.06); color: var(--good); }
+    .pill.bad{ border-color: rgba(153,27,27,.25); background: rgba(153,27,27,.06); color: var(--bad); }
+    .pill.warn{ border-color: rgba(146,64,14,.25); background: rgba(146,64,14,.06); color: var(--warn); }
+
+    .drop{
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      background: var(--soft);
+      padding: 12px;
+      display:flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .drop .left{
+      display:flex;
+      flex-direction:column;
+      gap: 2px;
+      min-width: 240px;
+    }
+    .drop .title{
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .drop .meta{
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .mono{
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    .results h2{
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 8px;
+    }
+    .kvs{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (min-width: 620px){
+      .kvs{ grid-template-columns: 1fr 1fr; }
+    }
+    .kv{
+      border: 1px solid var(--line);
+      background:#fff;
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .kv .k{
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .kv .v{
+      font-size: 14px;
+      font-weight: 600;
+    }
+    a{ color:#1d4ed8; text-decoration: none; }
+    a:hover{ text-decoration: underline; }
+    ul{
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+    .footer-note{
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+    }
+    .tiny{
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .split{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 860px){
+      .split{ grid-template-columns: 1fr 1fr; }
+    }
+    .tagrow{
+      display:flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+    }
+    .tag{
+      background: var(--chip);
+      color: var(--chipText);
+      border: 1px solid rgba(55,48,163,.16);
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-family: var(--mono);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>VAT / Business Customer Capture — Platform Validator (POC)</h1>
+      <p class="sub">
+        Goal: prevent tax mismatch by verifying whether a sales platform supports capturing a VAT number and/or identifying business customers.
+        Inputs are dynamic (you have 200+ integrations).
+      </p>
+    </header>
+
+    <div class="grid">
+      <!-- LEFT: INPUTS -->
+      <section class="card">
+        <h2>Inputs</h2>
+
+        <div class="row">
+          <div class="col small">
+            <label for="country">Country (minimum)</label>
+            <select id="country">
+              <option value="">Select…</option>
+              <option>DE</option><option>NL</option><option>BE</option><option>FR</option><option>ES</option><option>IT</option>
+              <option>PL</option><option>SE</option><option>AT</option><option>DK</option><option>FI</option><option>IE</option>
+              <option>PT</option><option>CZ</option><option>HU</option><option>RO</option><option>BG</option><option>GR</option>
+              <option>SK</option><option>SI</option><option>HR</option><option>EE</option><option>LV</option><option>LT</option>
+              <option>LU</option><option>MT</option><option>CY</option>
+              <option>UK</option><option>NO</option><option>CH</option>
+              <option>US</option><option>CA</option><option>AU</option>
+            </select>
+            <p class="hint">Use ISO-like codes for speed (e.g., DE, NL).</p>
+          </div>
+
+          <div class="col">
+            <label for="platform">Platform name (minimum)</label>
+            <input id="platform" type="text" placeholder="e.g., Amazon, bol.com, OTTO, Kaufland…" />
+            <p class="hint">Free text; supports all your integrations.</p>
+          </div>
+        </div>
+
+        <div class="split" style="margin-top:12px">
+          <div class="col">
+            <label for="devSite">API developer site (nice to have)</label>
+            <input id="devSite" type="url" placeholder="https://developer.example.com/…" />
+            <p class="hint">If you have the canonical developer portal URL, paste it here.</p>
+          </div>
+
+          <div class="col">
+            <label for="docsUrl">Docs URL (nice to have)</label>
+            <input id="docsUrl" type="url" placeholder="https://…/docs/… (specific endpoint/guide if possible)" />
+            <p class="hint">Direct links improve recall (VAT number / invoice / buyer type / company fields).</p>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="drop" id="dropZone">
+            <div class="left">
+              <div class="title">Upload API documentation PDF (optional)</div>
+              <div class="meta">Drag & drop a PDF here, or click “Choose PDF”.</div>
+            </div>
+            <div class="right">
+              <input id="pdfFile" type="file" accept="application/pdf" style="display:none" />
+              <button class="secondary" id="choosePdfBtn" type="button">Choose PDF</button>
+            </div>
+            <div class="mono tiny" id="pdfMeta">No file selected.</div>
+          </div>
+          <div class="tiny">
+            Tip: If the platform blocks crawling, a PDF export of the dev guide is usually enough for reliable extraction.
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label for="notes">Extra context (optional)</label>
+          <textarea id="notes" placeholder="Anything we should know? e.g. 'Legacy integration treated B2B as B2C; we need VAT capture and buyer type for tax logic.'"></textarea>
+          <p class="hint">This is included in the AI request to improve precision.</p>
+        </div>
+
+        <div class="actions">
+          <button id="runBtn" type="button">RUN</button>
+          <button id="resetBtn" class="secondary" type="button">Reset</button>
+          <span class="pill"><strong>Status:</strong> <span id="statusText">idle</span></span>
+          <span class="pill"><strong>Mode:</strong> deep search (web + docs + pdf)</span>
+        </div>
+
+        <div class="footer-note">
+          <div><strong>Backend required.</strong> The browser alone can’t reliably “deep search” the web or parse PDFs at scale (CORS, auth, rate limits).</div>
+          <div class="tiny mono" style="margin-top:6px">
+            This UI expects a POST endpoint: <strong>/api/analyze</strong> that returns structured JSON (see “Backend contract” below in the HTML).
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: OUTPUT -->
+      <section class="card results">
+        <h2>
+          Results
+          <span class="pill"><strong>Run ID:</strong> <span id="runId">—</span></span>
+        </h2>
+
+        <div class="kvs">
+          <div class="kv">
+            <div class="k">Information found?</div>
+            <div class="v" id="foundInfo">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">Possibility exists?</div>
+            <div class="v" id="possible">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">VAT capture supported?</div>
+            <div class="v" id="vatCapture">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">Business customer flag supported?</div>
+            <div class="v" id="b2bFlag">—</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="pill" id="confidencePill"><strong>Confidence:</strong> <span id="confidence">—</span></div>
+          <div class="hint" id="summaryText" style="margin-top:8px">No data yet.</div>
+        </div>
+
+        <div style="margin-top:14px" class="card" id="sourcesCard">
+          <h2 style="margin:0 0 8px">Hyperlinks / Evidence</h2>
+          <div class="hint">Links where the AI found VAT / buyer-type capture guidance (if available).</div>
+          <ul id="sourcesList"><li class="hint">No links yet.</li></ul>
+        </div>
+
+        <div style="margin-top:14px" class="card">
+          <h2 style="margin:0 0 8px">API & Components</h2>
+          <div class="hint">Relevant APIs / fields / UI components (checkout/company fields/invoicing) that indicate VAT capture and/or business customer identification.</div>
+          <div class="tagrow" id="componentsTags">
+            <span class="hint">—</span>
+          </div>
+          <ul id="componentsList" class="mono"></ul>
+        </div>
+
+        <div style="margin-top:14px" class="card">
+          <h2 style="margin:0 0 8px">Postman Library</h2>
+          <div class="hint">If the platform provides a Postman collection/library, the AI will link it, or your backend can generate one.</div>
+          <div id="postmanBlock" class="hint">—</div>
+        </div>
+
+        <div class="footer-note">
+          <div class="tiny mono"><strong>Backend contract (expected response shape):</strong></div>
+          <pre class="mono" style="white-space:pre-wrap;margin:8px 0 0;border:1px solid var(--line);background:var(--soft);padding:10px;border-radius:12px;overflow:auto;">
+POST /api/analyze  (multipart/form-data)
+  fields:
+    country (string, required)
+    platform (string, required)
+    devSite (string url, optional)
+    docsUrl (string url, optional)
+    notes (string, optional)
+    pdf (file, optional)
+
+Response JSON (example):
+{
+  "runId":"2026-02-08T10:12:33Z-abc123",
+  "foundInfo": true,
+  "possible": true,
+  "confidence": 0.82,
+  "summary":"VAT ID capture described in buyer/invoicing docs; business customer determination via company fields.",
+  "vatCapture": { "supported": true, "how": "Which field(s) / endpoint(s) / UI path" },
+  "b2bFlag": { "supported": true, "how": "Signals/flags for business buyer" },
+  "sources":[
+    {"title":"Developer docs - Buyer/Invoice fields","url":"https://..."},
+    {"title":"FAQ - VAT invoice / business customers","url":"https://..."}
+  ],
+  "apiComponents":[
+    {"name":"Order API","details":"buyer.companyName, buyer.vatId"},
+    {"name":"Checkout UI","details":"Company + VAT number input enabled for B2B"}
+  ],
+  "postman":{
+    "available": true,
+    "url":"https://www.postman.com/.../collection/...",
+    "generatedCollectionUrl": null
+  }
+}</pre>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // ---------- Small helpers ----------
+    const $ = (id) => document.getElementById(id);
+    const setStatus = (txt) => $("statusText").textContent = txt;
+
+    function pillizeYesNo(el, val){
+      const v = (val === true) ? "Yes" : (val === false) ? "No" : "—";
+      el.textContent = v;
+      el.style.color = "";
+      el.style.fontWeight = "700";
+      if(v === "Yes") el.style.color = "var(--good)";
+      if(v === "No")  el.style.color = "var(--bad)";
+      if(v === "—")   el.style.color = "var(--muted)";
+    }
+
+    function safeUrl(u){
+      try { new URL(u); return true; } catch { return false; }
+    }
+
+    // ---------- Drag & Drop PDF ----------
+    const dropZone = $("dropZone");
+    const pdfFile = $("pdfFile");
+    const choosePdfBtn = $("choosePdfBtn");
+    const pdfMeta = $("pdfMeta");
+
+    function updatePdfMeta(){
+      const f = pdfFile.files && pdfFile.files[0];
+      if(!f){ pdfMeta.textContent = "No file selected."; return; }
+      pdfMeta.textContent = `Selected: ${f.name} (${Math.round(f.size/1024)} KB)`;
+    }
+
+    choosePdfBtn.addEventListener("click", () => pdfFile.click());
+    pdfFile.addEventListener("change", updatePdfMeta);
+
+    ["dragenter","dragover"].forEach(evt => dropZone.addEventListener(evt, (e) => {
+      e.preventDefault(); e.stopPropagation();
+      dropZone.style.borderColor = "#c7d2fe";
+      dropZone.style.background = "#ffffff";
+    }));
+    ["dragleave","drop"].forEach(evt => dropZone.addEventListener(evt, (e) => {
+      e.preventDefault(); e.stopPropagation();
+      dropZone.style.borderColor = "var(--line)";
+      dropZone.style.background = "var(--soft)";
+    }));
+    dropZone.addEventListener("drop", (e) => {
+      const f = e.dataTransfer.files && e.dataTransfer.files[0];
+      if(!f) return;
+      if(f.type !== "application/pdf"){
+        alert("Please drop a PDF file.");
+        return;
+      }
+      pdfFile.files = e.dataTransfer.files;
+      updatePdfMeta();
+    });
+
+    // ---------- Persistence ----------
+    const STORAGE_KEY = "vat_platform_validator_v1";
+    function saveForm(){
+      const data = {
+        country: $("country").value,
+        platform: $("platform").value,
+        devSite: $("devSite").value,
+        docsUrl: $("docsUrl").value,
+        notes: $("notes").value
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+    function loadForm(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return;
+        const d = JSON.parse(raw);
+        $("country").value = d.country || "";
+        $("platform").value = d.platform || "";
+        $("devSite").value = d.devSite || "";
+        $("docsUrl").value = d.docsUrl || "";
+        $("notes").value = d.notes || "";
+      }catch{}
+    }
+    ["country","platform","devSite","docsUrl","notes"].forEach(id => {
+      $(id).addEventListener("input", saveForm);
+      $(id).addEventListener("change", saveForm);
+    });
+    loadForm();
+
+    // ---------- Render results ----------
+    function renderResult(res){
+      $("runId").textContent = res.runId || "—";
+
+      pillizeYesNo($("foundInfo"), res.foundInfo);
+      pillizeYesNo($("possible"), res.possible);
+      pillizeYesNo($("vatCapture"), res.vatCapture?.supported);
+      pillizeYesNo($("b2bFlag"), res.b2bFlag?.supported);
+
+      const conf = (typeof res.confidence === "number")
+        ? `${Math.round(res.confidence * 100)}%`
+        : "—";
+      $("confidence").textContent = conf;
+
+      const pill = $("confidencePill");
+      pill.classList.remove("good","warn","bad");
+      if(typeof res.confidence === "number"){
+        if(res.confidence >= 0.8) pill.classList.add("good");
+        else if(res.confidence >= 0.55) pill.classList.add("warn");
+        else pill.classList.add("bad");
+      }
+
+      $("summaryText").textContent = res.summary || "—";
+
+      // Sources
+      const list = $("sourcesList");
+      list.innerHTML = "";
+      const sources = Array.isArray(res.sources) ? res.sources : [];
+      if(!sources.length){
+        const li = document.createElement("li");
+        li.className = "hint";
+        li.textContent = "No links returned.";
+        list.appendChild(li);
+      } else {
+        sources.forEach(s => {
+          const li = document.createElement("li");
+          const title = s.title || s.url || "Source";
+          if(s.url && safeUrl(s.url)){
+            const a = document.createElement("a");
+            a.href = s.url; a.target = "_blank"; a.rel="noreferrer";
+            a.textContent = title;
+            li.appendChild(a);
+          } else {
+            li.textContent = title;
+          }
+          list.appendChild(li);
+        });
+      }
+
+      // API & components
+      const tags = $("componentsTags");
+      const ul = $("componentsList");
+      tags.innerHTML = "";
+      ul.innerHTML = "";
+
+      const comps = Array.isArray(res.apiComponents) ? res.apiComponents : [];
+      if(!comps.length){
+        tags.innerHTML = `<span class="hint">—</span>`;
+      } else {
+        // tags: names
+        comps.slice(0, 12).forEach(c => {
+          const t = document.createElement("span");
+          t.className = "tag";
+          t.textContent = c.name || "Component";
+          tags.appendChild(t);
+        });
+        // details list
+        comps.forEach(c => {
+          const li = document.createElement("li");
+          const name = c.name ? `${c.name}: ` : "";
+          li.textContent = name + (c.details || "");
+          ul.appendChild(li);
+        });
+      }
+
+      // Postman block
+      const pm = res.postman || {};
+      const block = $("postmanBlock");
+      block.innerHTML = "";
+      if(pm.available === true){
+        const items = [];
+        items.push(`<span class="pill good"><strong>Available:</strong> Yes</span>`);
+        if(pm.url && safeUrl(pm.url)){
+          items.push(` <a href="${pm.url}" target="_blank" rel="noreferrer">Open Postman library</a>`);
+        }
+        if(pm.generatedCollectionUrl && safeUrl(pm.generatedCollectionUrl)){
+          items.push(` · <a href="${pm.generatedCollectionUrl}" target="_blank" rel="noreferrer">Download generated collection</a>`);
+        }
+        block.innerHTML = items.join("");
+      } else if(pm.available === false){
+        block.innerHTML = `<span class="pill bad"><strong>Available:</strong> No</span>`;
+      } else {
+        block.textContent = "—";
+      }
+    }
+
+    function clearResults(){
+      $("runId").textContent = "—";
+      ["foundInfo","possible","vatCapture","b2bFlag"].forEach(id => $(id).textContent = "—");
+      $("confidence").textContent = "—";
+      $("summaryText").textContent = "No data yet.";
+      $("sourcesList").innerHTML = `<li class="hint">No links yet.</li>`;
+      $("componentsTags").innerHTML = `<span class="hint">—</span>`;
+      $("componentsList").innerHTML = "";
+      $("postmanBlock").textContent = "—";
+      $("confidencePill").classList.remove("good","warn","bad");
+    }
+
+    // ---------- Run ----------
+    const runBtn = $("runBtn");
+    const resetBtn = $("resetBtn");
+
+    resetBtn.addEventListener("click", () => {
+      $("country").value = "";
+      $("platform").value = "";
+      $("devSite").value = "";
+      $("docsUrl").value = "";
+      $("notes").value = "";
+      pdfFile.value = "";
+      updatePdfMeta();
+      localStorage.removeItem(STORAGE_KEY);
+      clearResults();
+      setStatus("idle");
+    });
+
+    runBtn.addEventListener("click", async () => {
+      const country = $("country").value.trim();
+      const platform = $("platform").value.trim();
+      const devSite = $("devSite").value.trim();
+      const docsUrl = $("docsUrl").value.trim();
+      const notes = $("notes").value.trim();
+      const pdf = pdfFile.files && pdfFile.files[0];
+
+      if(!country || !platform){
+        alert("Country and Platform name are required.");
+        return;
+      }
+      if(devSite && !safeUrl(devSite)) { alert("Developer site URL is invalid."); return; }
+      if(docsUrl && !safeUrl(docsUrl)) { alert("Docs URL is invalid."); return; }
+
+      runBtn.disabled = true;
+      setStatus("running");
+      clearResults();
+
+      try{
+        const fd = new FormData();
+        fd.append("country", country);
+        fd.append("platform", platform);
+        if(devSite) fd.append("devSite", devSite);
+        if(docsUrl) fd.append("docsUrl", docsUrl);
+        if(notes) fd.append("notes", notes);
+        if(pdf) fd.append("pdf", pdf);
+
+        // IMPORTANT: Implement this endpoint in your backend
+        const resp = await fetch("/api/analyze", {
+          method: "POST",
+          body: fd
+        });
+
+        if(!resp.ok){
+          const txt = await resp.text();
+          throw new Error(`Backend error (${resp.status}): ${txt.slice(0, 400)}`);
+        }
+
+        const json = await resp.json();
+        renderResult(json);
+        setStatus("done");
+      }catch(err){
+        console.error(err);
+        setStatus("error");
+        $("summaryText").textContent =
+          "Run failed. Check console + backend logs. " +
+          (err?.message ? `(${err.message})` : "");
+        $("confidencePill").classList.add("bad");
+      }finally{
+        runBtn.disabled = false;
+      }
+    });
+
+    // init
+    updatePdfMeta();
+    clearResults();
+  </script>
+</body>
+</html>
 
