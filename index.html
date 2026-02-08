@@ -1,29 +1,36 @@
 <!doctype html>
-<img src="logo.png" alt="My Logo" class="logo">
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>VAT / Business Customer Capture — Platform Validator (POC)</title>
+  <title>VAT / B2B Capture Validator</title>
+    <!-- Put your logo image in repo root as logo.png -->
+    <link rel="icon" type="image/png" href="logo.png" />
+
   <style>
     :root{
       --bg:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --line:#e5e7eb;
-      --soft:#f9fafb;
-      --btn:#111827;
-      --btnText:#ffffff;
-      --good:#065f46;
-      --bad:#991b1b;
-      --warn:#92400e;
-      --chip:#eef2ff;
-      --chipText:#3730a3;
-      --shadow: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
-      --radius: 14px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --panel:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#e2e8f0;
+      --soft:#f8fafc;
+
+      /* Bed-Sizes-like accent (purple) */
+      --accent:#7c3aed;
+      --accent2:#8b5cf6;
+      --accentSoft: rgba(124, 58, 237, .10);
+
+      --good:#16a34a;
+      --bad:#dc2626;
+      --warn:#d97706;
+
+      --radius:16px;
+      --shadow: 0 1px 0 rgba(15,23,42,.04), 0 10px 30px rgba(15,23,42,.06);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
+
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -32,57 +39,98 @@
       font-family:var(--sans);
       line-height:1.35;
     }
+
     .wrap{
       max-width: 980px;
       margin: 0 auto;
-      padding: 28px 18px 64px;
+      padding: 22px 16px 64px;
     }
-    header{
-      padding: 8px 0 14px;
+
+    /* Header (Bed-Sizes style) */
+    .top{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap: 10px;
+      padding: 8px 0 18px;
       border-bottom: 1px solid var(--line);
-      margin-bottom: 18px;
+      margin-bottom: 16px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+    .brand img{
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(124,58,237,.12);
     }
     h1{
-      font-size: 20px;
-      margin: 0 0 6px;
+      margin:0;
+      font-size: 22px;
       letter-spacing: .2px;
     }
-    .sub{
-      color:var(--muted);
+    .subline{
+      margin: 0;
       font-size: 13px;
-      margin:0;
+      color: var(--muted);
+      display:flex;
+      flex-wrap:wrap;
+      gap: 8px;
+      align-items:center;
     }
+    .dot{ opacity:.6 }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .pill.accent{
+      border-color: rgba(124,58,237,.25);
+      background: var(--accentSoft);
+      color: #4c1d95;
+    }
+
+    /* Layout */
     .grid{
       display:grid;
       grid-template-columns: 1fr;
       gap: 14px;
-      margin-top: 16px;
+      margin-top: 14px;
     }
-    @media (min-width: 860px){
+    @media (min-width: 920px){
       .grid{ grid-template-columns: 1.1fr .9fr; }
     }
-    .card{
-      border:1px solid var(--line);
+
+    .section{
+      background: var(--panel);
+      border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: var(--bg);
       box-shadow: var(--shadow);
       padding: 14px;
     }
-    .card h2{
+
+    .section h2{
+      margin: 0 0 8px;
       font-size: 14px;
-      margin: 0 0 10px;
+      letter-spacing:.15px;
     }
-    .hint{
-      margin: 6px 0 0;
+    .help{
+      margin: 0 0 12px;
       font-size: 12px;
       color: var(--muted);
     }
-    .row{
-      display:flex;
-      gap: 10px;
-      align-items: flex-end;
-      flex-wrap: wrap;
-    }
+
+    /* Forms */
     label{
       display:block;
       font-size: 12px;
@@ -106,185 +154,184 @@
       background: #fbfbff;
     }
     input:focus, select:focus, textarea:focus{
-      border-color:#c7d2fe;
-      box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+      border-color: rgba(124,58,237,.45);
+      box-shadow: 0 0 0 4px rgba(124,58,237,.12);
       background:#fff;
+    }
+
+    .row{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:flex-end;
     }
     .col{
       flex: 1 1 240px;
       min-width: 240px;
     }
     .col.small{
-      flex: 0 1 170px;
-      min-width: 170px;
+      flex: 0 1 180px;
+      min-width: 180px;
     }
+
+    /* File area (Bed-Sizes vibe: simple and calm) */
+    .filebox{
+      border: 1px dashed var(--line);
+      background: var(--soft);
+      border-radius: 12px;
+      padding: 12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      align-items:center;
+      justify-content: space-between;
+    }
+    .filemeta{
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .filetitle{
+      font-weight: 700;
+      font-size: 13px;
+      margin: 0;
+    }
+
+    /* Buttons */
     .actions{
       display:flex;
+      flex-wrap:wrap;
       gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 10px;
       align-items:center;
+      margin-top: 12px;
     }
     button{
-      border:1px solid var(--btn);
-      background: var(--btn);
-      color: var(--btnText);
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color:#fff;
       border-radius: 999px;
       padding: 10px 14px;
       font-size: 13px;
       cursor:pointer;
       letter-spacing:.2px;
+      box-shadow: 0 10px 22px rgba(124,58,237,.20);
     }
-    button.secondary{
-      border:1px solid var(--line);
-      background:#fff;
-      color: var(--text);
-    }
-    button:disabled{
-      opacity:.55;
-      cursor:not-allowed;
-    }
-    .statusbar{
-      margin-top: 10px;
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items:center;
-      border-top: 1px dashed var(--line);
-      padding-top: 10px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background:#fff;
-      color: var(--muted);
-      font-size: 12px;
-      white-space: nowrap;
-    }
-    .pill strong{ color: var(--text); font-weight: 600; }
-    .pill.good{ border-color: rgba(6,95,70,.25); background: rgba(6,95,70,.06); color: var(--good); }
-    .pill.bad{ border-color: rgba(153,27,27,.25); background: rgba(153,27,27,.06); color: var(--bad); }
-    .pill.warn{ border-color: rgba(146,64,14,.25); background: rgba(146,64,14,.06); color: var(--warn); }
+    button:hover{ background: var(--accent2); border-color: var(--accent2); }
+    button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
 
-    .drop{
-      border: 1px dashed var(--line);
-      border-radius: 12px;
-      background: var(--soft);
-      padding: 12px;
+    button.secondary{
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      box-shadow: none;
+    }
+    button.secondary:hover{
+      border-color: rgba(124,58,237,.35);
+      color: #4c1d95;
+    }
+
+    .statusline{
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--line);
       display:flex;
       gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-    .drop .left{
-      display:flex;
-      flex-direction:column;
-      gap: 2px;
-      min-width: 240px;
-    }
-    .drop .title{
-      font-size: 13px;
-      font-weight: 600;
-    }
-    .drop .meta{
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .mono{
-      font-family: var(--mono);
-      font-size: 12px;
-    }
-    .results h2{
-      display:flex;
-      justify-content: space-between;
+      flex-wrap:wrap;
       align-items:center;
-      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
     }
+
+    /* Results blocks */
     .kvs{
       display:grid;
       grid-template-columns: 1fr;
       gap: 10px;
       margin-top: 10px;
     }
-    @media (min-width: 620px){
+    @media (min-width: 640px){
       .kvs{ grid-template-columns: 1fr 1fr; }
     }
     .kv{
       border: 1px solid var(--line);
-      background:#fff;
       border-radius: 12px;
       padding: 10px;
+      background:#fff;
     }
-    .kv .k{
+    .k{ font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .v{ font-size: 14px; font-weight: 800; }
+
+    .yn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background:#fff;
       font-size: 12px;
       color: var(--muted);
-      margin-bottom: 6px;
     }
-    .kv .v{
-      font-size: 14px;
-      font-weight: 600;
+    .yn.good{ border-color: rgba(22,163,74,.22); background: rgba(22,163,74,.08); color: #14532d; }
+    .yn.bad{ border-color: rgba(220,38,38,.22); background: rgba(220,38,38,.08); color: #7f1d1d; }
+    .yn.warn{ border-color: rgba(217,119,6,.22); background: rgba(217,119,6,.10); color: #7c2d12; }
+    .yn.accent{ border-color: rgba(124,58,237,.22); background: rgba(124,58,237,.10); color: #4c1d95; }
+
+    .card2{
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      background:#fff;
     }
-    a{ color:#1d4ed8; text-decoration: none; }
-    a:hover{ text-decoration: underline; }
-    ul{
-      margin: 8px 0 0;
-      padding-left: 18px;
+    .card2 h3{
+      margin:0 0 8px;
+      font-size: 13px;
     }
-    .footer-note{
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: 12px;
-      border-top: 1px solid var(--line);
-      padding-top: 10px;
-    }
-    .tiny{
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 6px;
-    }
-    .split{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-    @media (min-width: 860px){
-      .split{ grid-template-columns: 1fr 1fr; }
-    }
+    .mono{ font-family: var(--mono); font-size: 12px; }
+    a{ color:#1d4ed8; text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+    ul{ margin: 8px 0 0; padding-left: 18px; }
+
+    .tiny{ margin-top:8px; font-size: 11px; color: var(--muted); }
     .tagrow{
-      display:flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+      display:flex;
+      flex-wrap:wrap;
+      gap: 6px;
+      margin-top: 8px;
     }
     .tag{
-      background: var(--chip);
-      color: var(--chipText);
-      border: 1px solid rgba(55,48,163,.16);
+      font-family: var(--mono);
+      font-size: 12px;
       padding: 4px 8px;
       border-radius: 999px;
-      font-size: 12px;
-      font-family: var(--mono);
+      border: 1px solid rgba(124,58,237,.22);
+      background: rgba(124,58,237,.10);
+      color:#4c1d95;
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
-    <header>
-      <h1>VAT / Business Customer Capture — Platform Validator (POC)</h1>
-      <p class="sub">
-        Goal: prevent tax mismatch by verifying whether a sales platform supports capturing a VAT number and/or identifying business customers.
-        Inputs are dynamic (you have 200+ integrations).
+    <header class="top">
+      <div class="brand">
+        <!-- You can replace this with your own logo asset -->
+        <img src="logo.png" alt="logo" onerror="this.src='https://gleamm89.github.io/Bed-Sizes/logo.png'; this.onerror=null;" />
+        <h1>VAT / B2B Capture Validator</h1>
+      </div>
+
+      <p class="subline">
+        Deep-search docs & PDFs • Evidence links • API components • Postman library
+        <span class="dot">•</span>
+        <span class="pill accent" id="bannerStatus">Waiting for input…</span>
       </p>
     </header>
 
     <div class="grid">
-      <!-- LEFT: INPUTS -->
-      <section class="card">
-        <h2>Inputs</h2>
+      <!-- INPUTS -->
+      <section class="section">
+        <h2>Input</h2>
+        <p class="help">Minimum required: <strong>Platform name</strong> + <strong>Country</strong>. Everything else improves accuracy.</p>
 
         <div class="row">
           <div class="col small">
@@ -299,74 +346,69 @@
               <option>UK</option><option>NO</option><option>CH</option>
               <option>US</option><option>CA</option><option>AU</option>
             </select>
-            <p class="hint">Use ISO-like codes for speed (e.g., DE, NL).</p>
+            <div class="tiny">Use ISO-like codes (DE, NL, …).</div>
           </div>
 
           <div class="col">
             <label for="platform">Platform name (minimum)</label>
-            <input id="platform" type="text" placeholder="e.g., Amazon, bol.com, OTTO, Kaufland…" />
-            <p class="hint">Free text; supports all your integrations.</p>
+            <input id="platform" type="text" placeholder="Amazon, bol.com, OTTO, …" />
+            <div class="tiny">Free-text so it works for 200+ integrations.</div>
           </div>
         </div>
 
-        <div class="split" style="margin-top:12px">
+        <div class="row" style="margin-top:12px">
           <div class="col">
-            <label for="devSite">API developer site (nice to have)</label>
+            <label for="devSite">API developer site (optional)</label>
             <input id="devSite" type="url" placeholder="https://developer.example.com/…" />
-            <p class="hint">If you have the canonical developer portal URL, paste it here.</p>
           </div>
-
           <div class="col">
-            <label for="docsUrl">Docs URL (nice to have)</label>
-            <input id="docsUrl" type="url" placeholder="https://…/docs/… (specific endpoint/guide if possible)" />
-            <p class="hint">Direct links improve recall (VAT number / invoice / buyer type / company fields).</p>
+            <label for="docsUrl">Docs URL (optional)</label>
+            <input id="docsUrl" type="url" placeholder="https://…/docs/… (VAT / invoicing / buyer fields)" />
           </div>
         </div>
 
         <div style="margin-top:12px">
-          <div class="drop" id="dropZone">
-            <div class="left">
-              <div class="title">Upload API documentation PDF (optional)</div>
-              <div class="meta">Drag & drop a PDF here, or click “Choose PDF”.</div>
+          <div class="filebox" id="dropZone">
+            <div>
+              <p class="filetitle">Upload developer documentation PDF (optional)</p>
+              <div class="filemeta" id="pdfMeta">No file selected.</div>
             </div>
-            <div class="right">
+            <div>
               <input id="pdfFile" type="file" accept="application/pdf" style="display:none" />
-              <button class="secondary" id="choosePdfBtn" type="button">Choose PDF</button>
+              <button class="secondary" id="choosePdfBtn" type="button">Upload PDF</button>
             </div>
-            <div class="mono tiny" id="pdfMeta">No file selected.</div>
           </div>
-          <div class="tiny">
-            Tip: If the platform blocks crawling, a PDF export of the dev guide is usually enough for reliable extraction.
-          </div>
+          <div class="tiny">Drag & drop also works. If docs are behind login, upload a PDF export.</div>
         </div>
 
         <div style="margin-top:12px">
-          <label for="notes">Extra context (optional)</label>
-          <textarea id="notes" placeholder="Anything we should know? e.g. 'Legacy integration treated B2B as B2C; we need VAT capture and buyer type for tax logic.'"></textarea>
-          <p class="hint">This is included in the AI request to improve precision.</p>
+          <label for="notes">Notes (optional)</label>
+          <textarea id="notes" placeholder="e.g. 'Legacy integration treated B2B as B2C; we need VAT capture + business buyer identification for tax logic.'"></textarea>
         </div>
 
         <div class="actions">
-          <button id="runBtn" type="button">RUN</button>
+          <button id="runBtn" type="button">Execute</button>
           <button id="resetBtn" class="secondary" type="button">Reset</button>
-          <span class="pill"><strong>Status:</strong> <span id="statusText">idle</span></span>
-          <span class="pill"><strong>Mode:</strong> deep search (web + docs + pdf)</span>
+
+          <span class="pill"><strong>Status:</strong>&nbsp;<span id="statusText">idle</span></span>
+          <span class="pill"><strong>Endpoint:</strong>&nbsp;<span class="mono">POST /api/analyze</span></span>
         </div>
 
-        <div class="footer-note">
-          <div><strong>Backend required.</strong> The browser alone can’t reliably “deep search” the web or parse PDFs at scale (CORS, auth, rate limits).</div>
-          <div class="tiny mono" style="margin-top:6px">
-            This UI expects a POST endpoint: <strong>/api/analyze</strong> that returns structured JSON (see “Backend contract” below in the HTML).
-          </div>
+        <div class="statusline">
+          <span class="pill accent"><strong>Mode:</strong>&nbsp;deep search (docs + pdf)</span>
+          <span class="pill"><strong>Privacy:</strong>&nbsp;only what you submit is analyzed</span>
         </div>
       </section>
 
-      <!-- RIGHT: OUTPUT -->
-      <section class="card results">
-        <h2>
-          Results
-          <span class="pill"><strong>Run ID:</strong> <span id="runId">—</span></span>
-        </h2>
+      <!-- RESULTS -->
+      <section class="section">
+        <h2>Outcome</h2>
+        <p class="help">Based on the selection fields: Yes/No found, Yes/No possible, hyperlinks, API/components, Postman library.</p>
+
+        <div class="actions" style="margin-top:0">
+          <span class="yn accent"><strong>Run ID:</strong>&nbsp;<span id="runId">—</span></span>
+          <span class="yn" id="confidenceBadge"><strong>Confidence:</strong>&nbsp;<span id="confidence">—</span></span>
+        </div>
 
         <div class="kvs">
           <div class="kv">
@@ -387,92 +429,64 @@
           </div>
         </div>
 
-        <div style="margin-top:12px">
-          <div class="pill" id="confidencePill"><strong>Confidence:</strong> <span id="confidence">—</span></div>
-          <div class="hint" id="summaryText" style="margin-top:8px">No data yet.</div>
+        <div class="card2">
+          <h3>Summary</h3>
+          <div class="help" id="summaryText" style="margin:0">No data yet.</div>
         </div>
 
-        <div style="margin-top:14px" class="card" id="sourcesCard">
-          <h2 style="margin:0 0 8px">Hyperlinks / Evidence</h2>
-          <div class="hint">Links where the AI found VAT / buyer-type capture guidance (if available).</div>
-          <ul id="sourcesList"><li class="hint">No links yet.</li></ul>
+        <div class="card2">
+          <h3>Hyperlinks / Evidence</h3>
+          <div class="help" style="margin:0">Links where VAT / buyer-type capture guidance was found (if available).</div>
+          <ul id="sourcesList"><li class="help">No links yet.</li></ul>
         </div>
 
-        <div style="margin-top:14px" class="card">
-          <h2 style="margin:0 0 8px">API & Components</h2>
-          <div class="hint">Relevant APIs / fields / UI components (checkout/company fields/invoicing) that indicate VAT capture and/or business customer identification.</div>
-          <div class="tagrow" id="componentsTags">
-            <span class="hint">—</span>
-          </div>
+        <div class="card2">
+          <h3>API & Components</h3>
+          <div class="help" style="margin:0">Relevant endpoints/fields/UI components (checkout/company fields/invoicing) related to VAT & B2B detection.</div>
+          <div class="tagrow" id="componentsTags"><span class="help">—</span></div>
           <ul id="componentsList" class="mono"></ul>
         </div>
 
-        <div style="margin-top:14px" class="card">
-          <h2 style="margin:0 0 8px">Postman Library</h2>
-          <div class="hint">If the platform provides a Postman collection/library, the AI will link it, or your backend can generate one.</div>
-          <div id="postmanBlock" class="hint">—</div>
+        <div class="card2">
+          <h3>Postman Library</h3>
+          <div id="postmanBlock" class="help" style="margin:0">—</div>
         </div>
 
-        <div class="footer-note">
-          <div class="tiny mono"><strong>Backend contract (expected response shape):</strong></div>
-          <pre class="mono" style="white-space:pre-wrap;margin:8px 0 0;border:1px solid var(--line);background:var(--soft);padding:10px;border-radius:12px;overflow:auto;">
-POST /api/analyze  (multipart/form-data)
-  fields:
-    country (string, required)
-    platform (string, required)
-    devSite (string url, optional)
-    docsUrl (string url, optional)
-    notes (string, optional)
-    pdf (file, optional)
-
-Response JSON (example):
-{
-  "runId":"2026-02-08T10:12:33Z-abc123",
-  "foundInfo": true,
-  "possible": true,
-  "confidence": 0.82,
-  "summary":"VAT ID capture described in buyer/invoicing docs; business customer determination via company fields.",
-  "vatCapture": { "supported": true, "how": "Which field(s) / endpoint(s) / UI path" },
-  "b2bFlag": { "supported": true, "how": "Signals/flags for business buyer" },
-  "sources":[
-    {"title":"Developer docs - Buyer/Invoice fields","url":"https://..."},
-    {"title":"FAQ - VAT invoice / business customers","url":"https://..."}
-  ],
-  "apiComponents":[
-    {"name":"Order API","details":"buyer.companyName, buyer.vatId"},
-    {"name":"Checkout UI","details":"Company + VAT number input enabled for B2B"}
-  ],
-  "postman":{
-    "available": true,
-    "url":"https://www.postman.com/.../collection/...",
-    "generatedCollectionUrl": null
-  }
-}</pre>
+        <div class="tiny mono" style="margin-top:12px">
+          Backend expected: <strong>POST /api/analyze</strong> (multipart/form-data). Same JSON contract as before.
         </div>
       </section>
     </div>
   </div>
 
   <script>
-    // ---------- Small helpers ----------
     const $ = (id) => document.getElementById(id);
-    const setStatus = (txt) => $("statusText").textContent = txt;
+    const setStatus = (txt) => {
+      $("statusText").textContent = txt;
+      const banner = $("bannerStatus");
+      if(txt === "idle") banner.textContent = "Waiting for input…";
+      else if(txt === "running") banner.textContent = "Running analysis…";
+      else if(txt === "done") banner.textContent = "Done";
+      else if(txt === "error") banner.textContent = "Error";
+      else banner.textContent = txt;
+    };
 
-    function pillizeYesNo(el, val){
-      const v = (val === true) ? "Yes" : (val === false) ? "No" : "—";
-      el.textContent = v;
-      el.style.color = "";
-      el.style.fontWeight = "700";
-      if(v === "Yes") el.style.color = "var(--good)";
-      if(v === "No")  el.style.color = "var(--bad)";
-      if(v === "—")   el.style.color = "var(--muted)";
+    function safeUrl(u){ try { new URL(u); return true; } catch { return false; } }
+
+    function ynText(val){
+      if(val === true) return {txt:"Yes", cls:"good"};
+      if(val === false) return {txt:"No", cls:"bad"};
+      return {txt:"—", cls:""};
     }
 
-    function safeUrl(u){
-      try { new URL(u); return true; } catch { return false; }
+    function setYesNo(el, val){
+      const {txt} = ynText(val);
+      el.textContent = txt;
+      el.style.fontWeight = "900";
+      el.style.color = (txt === "Yes") ? "var(--good)" : (txt === "No") ? "var(--bad)" : "var(--muted)";
     }
 
-    // ---------- Drag & Drop PDF ----------
+    // PDF UX
     const dropZone = $("dropZone");
     const pdfFile = $("pdfFile");
     const choosePdfBtn = $("choosePdfBtn");
@@ -489,8 +503,8 @@ Response JSON (example):
 
     ["dragenter","dragover"].forEach(evt => dropZone.addEventListener(evt, (e) => {
       e.preventDefault(); e.stopPropagation();
-      dropZone.style.borderColor = "#c7d2fe";
-      dropZone.style.background = "#ffffff";
+      dropZone.style.borderColor = "rgba(124,58,237,.45)";
+      dropZone.style.background = "#fff";
     }));
     ["dragleave","drop"].forEach(evt => dropZone.addEventListener(evt, (e) => {
       e.preventDefault(); e.stopPropagation();
@@ -500,16 +514,13 @@ Response JSON (example):
     dropZone.addEventListener("drop", (e) => {
       const f = e.dataTransfer.files && e.dataTransfer.files[0];
       if(!f) return;
-      if(f.type !== "application/pdf"){
-        alert("Please drop a PDF file.");
-        return;
-      }
+      if(f.type !== "application/pdf"){ alert("Please drop a PDF file."); return; }
       pdfFile.files = e.dataTransfer.files;
       updatePdfMeta();
     });
 
-    // ---------- Persistence ----------
-    const STORAGE_KEY = "vat_platform_validator_v1";
+    // Persistence
+    const STORAGE_KEY = "vat_platform_validator_bedsizes_style_v1";
     function saveForm(){
       const data = {
         country: $("country").value,
@@ -538,26 +549,43 @@ Response JSON (example):
     });
     loadForm();
 
-    // ---------- Render results ----------
+    // Results rendering
+    function clearResults(){
+      $("runId").textContent = "—";
+      ["foundInfo","possible","vatCapture","b2bFlag"].forEach(id => $(id).textContent = "—");
+      $("confidence").textContent = "—";
+      $("summaryText").textContent = "No data yet.";
+      $("sourcesList").innerHTML = `<li class="help">No links yet.</li>`;
+      $("componentsTags").innerHTML = `<span class="help">—</span>`;
+      $("componentsList").innerHTML = "";
+      $("postmanBlock").textContent = "—";
+
+      const badge = $("confidenceBadge");
+      badge.classList.remove("good","warn","bad");
+      badge.classList.add("accent");
+    }
+
     function renderResult(res){
       $("runId").textContent = res.runId || "—";
 
-      pillizeYesNo($("foundInfo"), res.foundInfo);
-      pillizeYesNo($("possible"), res.possible);
-      pillizeYesNo($("vatCapture"), res.vatCapture?.supported);
-      pillizeYesNo($("b2bFlag"), res.b2bFlag?.supported);
+      setYesNo($("foundInfo"), res.foundInfo);
+      setYesNo($("possible"), res.possible);
+      setYesNo($("vatCapture"), res.vatCapture?.supported);
+      setYesNo($("b2bFlag"), res.b2bFlag?.supported);
 
       const conf = (typeof res.confidence === "number")
         ? `${Math.round(res.confidence * 100)}%`
         : "—";
       $("confidence").textContent = conf;
 
-      const pill = $("confidencePill");
-      pill.classList.remove("good","warn","bad");
+      const badge = $("confidenceBadge");
+      badge.classList.remove("accent","good","warn","bad");
       if(typeof res.confidence === "number"){
-        if(res.confidence >= 0.8) pill.classList.add("good");
-        else if(res.confidence >= 0.55) pill.classList.add("warn");
-        else pill.classList.add("bad");
+        if(res.confidence >= 0.8) badge.classList.add("good");
+        else if(res.confidence >= 0.55) badge.classList.add("warn");
+        else badge.classList.add("bad");
+      } else {
+        badge.classList.add("accent");
       }
 
       $("summaryText").textContent = res.summary || "—";
@@ -567,10 +595,7 @@ Response JSON (example):
       list.innerHTML = "";
       const sources = Array.isArray(res.sources) ? res.sources : [];
       if(!sources.length){
-        const li = document.createElement("li");
-        li.className = "hint";
-        li.textContent = "No links returned.";
-        list.appendChild(li);
+        list.innerHTML = `<li class="help">No links returned.</li>`;
       } else {
         sources.forEach(s => {
           const li = document.createElement("li");
@@ -587,24 +612,21 @@ Response JSON (example):
         });
       }
 
-      // API & components
+      // API components
       const tags = $("componentsTags");
       const ul = $("componentsList");
       tags.innerHTML = "";
       ul.innerHTML = "";
-
       const comps = Array.isArray(res.apiComponents) ? res.apiComponents : [];
       if(!comps.length){
-        tags.innerHTML = `<span class="hint">—</span>`;
+        tags.innerHTML = `<span class="help">—</span>`;
       } else {
-        // tags: names
-        comps.slice(0, 12).forEach(c => {
+        comps.slice(0, 10).forEach(c => {
           const t = document.createElement("span");
           t.className = "tag";
           t.textContent = c.name || "Component";
           tags.appendChild(t);
         });
-        // details list
         comps.forEach(c => {
           const li = document.createElement("li");
           const name = c.name ? `${c.name}: ` : "";
@@ -613,40 +635,27 @@ Response JSON (example):
         });
       }
 
-      // Postman block
+      // Postman
       const pm = res.postman || {};
       const block = $("postmanBlock");
-      block.innerHTML = "";
       if(pm.available === true){
-        const items = [];
-        items.push(`<span class="pill good"><strong>Available:</strong> Yes</span>`);
+        const parts = [];
+        parts.push(`<span class="yn good"><strong>Available:</strong>&nbsp;Yes</span>`);
         if(pm.url && safeUrl(pm.url)){
-          items.push(` <a href="${pm.url}" target="_blank" rel="noreferrer">Open Postman library</a>`);
+          parts.push(`&nbsp;&nbsp;<a href="${pm.url}" target="_blank" rel="noreferrer">Open Postman library</a>`);
         }
         if(pm.generatedCollectionUrl && safeUrl(pm.generatedCollectionUrl)){
-          items.push(` · <a href="${pm.generatedCollectionUrl}" target="_blank" rel="noreferrer">Download generated collection</a>`);
+          parts.push(`&nbsp;•&nbsp;<a href="${pm.generatedCollectionUrl}" target="_blank" rel="noreferrer">Download generated collection</a>`);
         }
-        block.innerHTML = items.join("");
+        block.innerHTML = parts.join("");
       } else if(pm.available === false){
-        block.innerHTML = `<span class="pill bad"><strong>Available:</strong> No</span>`;
+        block.innerHTML = `<span class="yn bad"><strong>Available:</strong>&nbsp;No</span>`;
       } else {
         block.textContent = "—";
       }
     }
 
-    function clearResults(){
-      $("runId").textContent = "—";
-      ["foundInfo","possible","vatCapture","b2bFlag"].forEach(id => $(id).textContent = "—");
-      $("confidence").textContent = "—";
-      $("summaryText").textContent = "No data yet.";
-      $("sourcesList").innerHTML = `<li class="hint">No links yet.</li>`;
-      $("componentsTags").innerHTML = `<span class="hint">—</span>`;
-      $("componentsList").innerHTML = "";
-      $("postmanBlock").textContent = "—";
-      $("confidencePill").classList.remove("good","warn","bad");
-    }
-
-    // ---------- Run ----------
+    // Run
     const runBtn = $("runBtn");
     const resetBtn = $("resetBtn");
 
@@ -691,11 +700,9 @@ Response JSON (example):
         if(notes) fd.append("notes", notes);
         if(pdf) fd.append("pdf", pdf);
 
-        // IMPORTANT: Implement this endpoint in your backend
-        const resp = await fetch("/api/analyze", {
-          method: "POST",
-          body: fd
-        });
+        // If your API is on another host/port, replace with absolute URL:
+        // const resp = await fetch("http://localhost:8000/api/analyze", { ... })
+        const resp = await fetch("/api/analyze", { method: "POST", body: fd });
 
         if(!resp.ok){
           const txt = await resp.text();
@@ -711,7 +718,9 @@ Response JSON (example):
         $("summaryText").textContent =
           "Run failed. Check console + backend logs. " +
           (err?.message ? `(${err.message})` : "");
-        $("confidencePill").classList.add("bad");
+        const badge = $("confidenceBadge");
+        badge.classList.remove("accent","good","warn");
+        badge.classList.add("bad");
       }finally{
         runBtn.disabled = false;
       }
@@ -720,7 +729,7 @@ Response JSON (example):
     // init
     updatePdfMeta();
     clearResults();
+    setStatus("idle");
   </script>
 </body>
 </html>
-
