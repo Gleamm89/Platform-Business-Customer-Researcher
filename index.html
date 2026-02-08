@@ -4,9 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>VAT / B2B Capture Validator</title>
-    <!-- Put your logo image in repo root as logo.png -->
     <link rel="icon" type="image/png" href="logo.png" />
-
   <style>
     :root{
       --bg:#ffffff;
@@ -16,7 +14,6 @@
       --line:#e2e8f0;
       --soft:#f8fafc;
 
-      /* Bed-Sizes-like accent (purple) */
       --accent:#7c3aed;
       --accent2:#8b5cf6;
       --accentSoft: rgba(124, 58, 237, .10);
@@ -41,12 +38,11 @@
     }
 
     .wrap{
-      max-width: 980px;
+      max-width: 1040px;
       margin: 0 auto;
       padding: 22px 16px 64px;
     }
 
-    /* Header (Bed-Sizes style) */
     .top{
       display:flex;
       flex-direction:column;
@@ -100,15 +96,14 @@
       color: #4c1d95;
     }
 
-    /* Layout */
     .grid{
       display:grid;
       grid-template-columns: 1fr;
       gap: 14px;
       margin-top: 14px;
     }
-    @media (min-width: 920px){
-      .grid{ grid-template-columns: 1.1fr .9fr; }
+    @media (min-width: 980px){
+      .grid{ grid-template-columns: 1.05fr .95fr; }
     }
 
     .section{
@@ -123,6 +118,11 @@
       margin: 0 0 8px;
       font-size: 14px;
       letter-spacing:.15px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content: space-between;
+      flex-wrap:wrap;
     }
     .help{
       margin: 0 0 12px;
@@ -130,7 +130,6 @@
       color: var(--muted);
     }
 
-    /* Forms */
     label{
       display:block;
       font-size: 12px;
@@ -174,7 +173,6 @@
       min-width: 180px;
     }
 
-    /* File area (Bed-Sizes vibe: simple and calm) */
     .filebox{
       border: 1px dashed var(--line);
       background: var(--soft);
@@ -191,12 +189,11 @@
       color: var(--muted);
     }
     .filetitle{
-      font-weight: 700;
+      font-weight: 800;
       font-size: 13px;
       margin: 0;
     }
 
-    /* Buttons */
     .actions{
       display:flex;
       flex-wrap:wrap;
@@ -217,7 +214,6 @@
     }
     button:hover{ background: var(--accent2); border-color: var(--accent2); }
     button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
-
     button.secondary{
       border: 1px solid var(--line);
       background: #fff;
@@ -241,14 +237,50 @@
       font-size: 12px;
     }
 
-    /* Results blocks */
+    /* Output controls */
+    .checkgrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 700px){
+      .checkgrid{ grid-template-columns: 1fr 1fr; }
+    }
+    .box{
+      border: 1px solid var(--line);
+      background:#fff;
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .box h3{
+      margin:0 0 8px;
+      font-size: 13px;
+    }
+    .opt{
+      display:flex;
+      align-items:flex-start;
+      gap: 10px;
+      padding: 6px 0;
+      border-top: 1px dashed rgba(226,232,240,.9);
+    }
+    .opt:first-of-type{ border-top:none; }
+    .opt input{ margin-top: 3px; }
+    .opt .t{
+      display:flex;
+      flex-direction:column;
+      gap: 2px;
+    }
+    .opt .name{ font-size: 13px; font-weight: 700; }
+    .opt .desc{ font-size: 12px; color: var(--muted); }
+
+    /* Results */
     .kvs{
       display:grid;
       grid-template-columns: 1fr;
       gap: 10px;
       margin-top: 10px;
     }
-    @media (min-width: 640px){
+    @media (min-width: 700px){
       .kvs{ grid-template-columns: 1fr 1fr; }
     }
     .kv{
@@ -258,7 +290,7 @@
       background:#fff;
     }
     .k{ font-size: 12px; color: var(--muted); margin-bottom: 6px; }
-    .v{ font-size: 14px; font-weight: 800; }
+    .v{ font-size: 14px; font-weight: 900; }
 
     .yn{
       display:inline-flex;
@@ -270,6 +302,7 @@
       background:#fff;
       font-size: 12px;
       color: var(--muted);
+      white-space: nowrap;
     }
     .yn.good{ border-color: rgba(22,163,74,.22); background: rgba(22,163,74,.08); color: #14532d; }
     .yn.bad{ border-color: rgba(220,38,38,.22); background: rgba(220,38,38,.08); color: #7f1d1d; }
@@ -283,22 +316,13 @@
       padding: 10px;
       background:#fff;
     }
-    .card2 h3{
-      margin:0 0 8px;
-      font-size: 13px;
-    }
+    .card2 h3{ margin:0 0 8px; font-size: 13px; }
     .mono{ font-family: var(--mono); font-size: 12px; }
     a{ color:#1d4ed8; text-decoration:none; }
     a:hover{ text-decoration:underline; }
     ul{ margin: 8px 0 0; padding-left: 18px; }
-
     .tiny{ margin-top:8px; font-size: 11px; color: var(--muted); }
-    .tagrow{
-      display:flex;
-      flex-wrap:wrap;
-      gap: 6px;
-      margin-top: 8px;
-    }
+    .tagrow{ display:flex; flex-wrap:wrap; gap: 6px; margin-top: 8px; }
     .tag{
       font-family: var(--mono);
       font-size: 12px;
@@ -308,6 +332,12 @@
       background: rgba(124,58,237,.10);
       color:#4c1d95;
     }
+
+    .divider{
+      height:1px;
+      background: var(--line);
+      margin: 12px 0;
+    }
   </style>
 </head>
 
@@ -315,7 +345,6 @@
   <div class="wrap">
     <header class="top">
       <div class="brand">
-        <!-- You can replace this with your own logo asset -->
         <img src="logo.png" alt="logo" onerror="this.src='https://gleamm89.github.io/Bed-Sizes/logo.png'; this.onerror=null;" />
         <h1>VAT / B2B Capture Validator</h1>
       </div>
@@ -330,8 +359,8 @@
     <div class="grid">
       <!-- INPUTS -->
       <section class="section">
-        <h2>Input</h2>
-        <p class="help">Minimum required: <strong>Platform name</strong> + <strong>Country</strong>. Everything else improves accuracy.</p>
+        <h2>Input <span class="pill"><strong>Minimum:</strong>&nbsp;Platform + Country</span></h2>
+        <p class="help">Add docs URLs or upload a PDF for the best results (platform docs may be behind login).</p>
 
         <div class="row">
           <div class="col small">
@@ -346,13 +375,11 @@
               <option>UK</option><option>NO</option><option>CH</option>
               <option>US</option><option>CA</option><option>AU</option>
             </select>
-            <div class="tiny">Use ISO-like codes (DE, NL, …).</div>
           </div>
 
           <div class="col">
             <label for="platform">Platform name (minimum)</label>
             <input id="platform" type="text" placeholder="Amazon, bol.com, OTTO, …" />
-            <div class="tiny">Free-text so it works for 200+ integrations.</div>
           </div>
         </div>
 
@@ -378,12 +405,109 @@
               <button class="secondary" id="choosePdfBtn" type="button">Upload PDF</button>
             </div>
           </div>
-          <div class="tiny">Drag & drop also works. If docs are behind login, upload a PDF export.</div>
         </div>
 
         <div style="margin-top:12px">
           <label for="notes">Notes (optional)</label>
           <textarea id="notes" placeholder="e.g. 'Legacy integration treated B2B as B2C; we need VAT capture + business buyer identification for tax logic.'"></textarea>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ✅ Selection boxes requested -->
+        <h2>Selection boxes for output</h2>
+        <p class="help">Choose what the AI should look for, and which blocks to show in the Outcome panel.</p>
+
+        <div class="checkgrid">
+          <div class="box">
+            <h3>Validation targets (what to find)</h3>
+
+            <div class="opt">
+              <input type="checkbox" id="tVat" checked />
+              <div class="t">
+                <div class="name">VAT number capture</div>
+                <div class="desc">Fields/endpoints/UI inputs for VAT ID / tax ID.</div>
+              </div>
+            </div>
+
+            <div class="opt">
+              <input type="checkbox" id="tB2b" checked />
+              <div class="t">
+                <div class="name">Business customer identification</div>
+                <div class="desc">Buyer type, company fields, business account flags.</div>
+              </div>
+            </div>
+
+            <div class="opt">
+              <input type="checkbox" id="tInvoice" />
+              <div class="t">
+                <div class="name">Invoice / billing address model</div>
+                <div class="desc">Invoice entity, billing company name, invoice VAT rules.</div>
+              </div>
+            </div>
+
+            <div class="opt">
+              <input type="checkbox" id="tTaxLogic" />
+              <div class="t">
+                <div class="name">Tax logic / exemptions</div>
+                <div class="desc">Reverse charge / VAT exemption / OSS/IOSS notes.</div>
+              </div>
+            </div>
+
+            <div class="opt">
+              <input type="checkbox" id="tExamples" />
+              <div class="t">
+                <div class="name">Examples / payloads</div>
+                <div class="desc">Sample requests/responses that show VAT/B2B signals.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box">
+            <h3>Outcome blocks (what to show)</h3>
+
+            <div class="opt">
+              <input type="checkbox" id="oYesNo" checked />
+              <div class="t">
+                <div class="name">Yes/No statements</div>
+                <div class="desc">Found? Possible? VAT supported? B2B flag supported?</div>
+              </div>
+            </div>
+
+            <div class="opt">
+              <input type="checkbox" id="oLinks" checked />
+              <div class="t">
+                <div class="name">Hyperlinks / Evidence</div>
+                <div class="desc">Links to docs where the info was found.</div>
+              </div>
+            </div>
+
+            <div class="opt">
+              <input type="checkbox" id="oComponents" checked />
+              <div class="t">
+                <div class="name">API & Components</div>
+                <div class="desc">Endpoints, fields, UI components related to VAT/B2B capture.</div>
+              </div>
+            </div>
+
+            <div class="opt">
+              <input type="checkbox" id="oPostman" checked />
+              <div class="t">
+                <div class="name">Postman library</div>
+                <div class="desc">Link to Postman collection/workspace or generated collection URL.</div>
+              </div>
+            </div>
+
+            <div class="opt">
+              <label for="depth" style="margin:0; font-weight:700; color:var(--text)">Search depth</label>
+              <select id="depth">
+                <option value="normal" selected>Normal (fast)</option>
+                <option value="deep">Deep (more pages, slower)</option>
+                <option value="pdf_only">PDF only (no web fetch)</option>
+                <option value="links_only">Links only (no crawling)</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         <div class="actions">
@@ -395,37 +519,40 @@
         </div>
 
         <div class="statusline">
-          <span class="pill accent"><strong>Mode:</strong>&nbsp;deep search (docs + pdf)</span>
-          <span class="pill"><strong>Privacy:</strong>&nbsp;only what you submit is analyzed</span>
+          <span class="pill accent"><strong>Mode:</strong>&nbsp;<span id="modeText">deep search (docs + pdf)</span></span>
+          <span class="pill"><strong>Saved:</strong>&nbsp;inputs persist locally</span>
         </div>
       </section>
 
       <!-- RESULTS -->
       <section class="section">
         <h2>Outcome</h2>
-        <p class="help">Based on the selection fields: Yes/No found, Yes/No possible, hyperlinks, API/components, Postman library.</p>
+        <p class="help">Results change based on the selected output blocks and targets.</p>
 
         <div class="actions" style="margin-top:0">
           <span class="yn accent"><strong>Run ID:</strong>&nbsp;<span id="runId">—</span></span>
           <span class="yn" id="confidenceBadge"><strong>Confidence:</strong>&nbsp;<span id="confidence">—</span></span>
         </div>
 
-        <div class="kvs">
-          <div class="kv">
-            <div class="k">Information found?</div>
-            <div class="v" id="foundInfo">—</div>
-          </div>
-          <div class="kv">
-            <div class="k">Possibility exists?</div>
-            <div class="v" id="possible">—</div>
-          </div>
-          <div class="kv">
-            <div class="k">VAT capture supported?</div>
-            <div class="v" id="vatCapture">—</div>
-          </div>
-          <div class="kv">
-            <div class="k">Business customer flag supported?</div>
-            <div class="v" id="b2bFlag">—</div>
+        <!-- YES/NO BLOCK -->
+        <div id="blkYesNo">
+          <div class="kvs">
+            <div class="kv">
+              <div class="k">Information found?</div>
+              <div class="v" id="foundInfo">—</div>
+            </div>
+            <div class="kv">
+              <div class="k">Possibility exists?</div>
+              <div class="v" id="possible">—</div>
+            </div>
+            <div class="kv">
+              <div class="k">VAT capture supported?</div>
+              <div class="v" id="vatCapture">—</div>
+            </div>
+            <div class="kv">
+              <div class="k">Business customer flag supported?</div>
+              <div class="v" id="b2bFlag">—</div>
+            </div>
           </div>
         </div>
 
@@ -434,26 +561,30 @@
           <div class="help" id="summaryText" style="margin:0">No data yet.</div>
         </div>
 
-        <div class="card2">
+        <!-- LINKS BLOCK -->
+        <div class="card2" id="blkLinks">
           <h3>Hyperlinks / Evidence</h3>
           <div class="help" style="margin:0">Links where VAT / buyer-type capture guidance was found (if available).</div>
           <ul id="sourcesList"><li class="help">No links yet.</li></ul>
         </div>
 
-        <div class="card2">
+        <!-- COMPONENTS BLOCK -->
+        <div class="card2" id="blkComponents">
           <h3>API & Components</h3>
-          <div class="help" style="margin:0">Relevant endpoints/fields/UI components (checkout/company fields/invoicing) related to VAT & B2B detection.</div>
+          <div class="help" style="margin:0">Relevant endpoints/fields/UI components related to VAT & B2B detection.</div>
           <div class="tagrow" id="componentsTags"><span class="help">—</span></div>
           <ul id="componentsList" class="mono"></ul>
         </div>
 
-        <div class="card2">
+        <!-- POSTMAN BLOCK -->
+        <div class="card2" id="blkPostman">
           <h3>Postman Library</h3>
           <div id="postmanBlock" class="help" style="margin:0">—</div>
         </div>
 
         <div class="tiny mono" style="margin-top:12px">
-          Backend expected: <strong>POST /api/analyze</strong> (multipart/form-data). Same JSON contract as before.
+          Backend expected: <strong>POST /api/analyze</strong> (multipart/form-data).
+          This UI sends additional fields: <strong>targets[]</strong>, <strong>outputs[]</strong>, <strong>depth</strong>.
         </div>
       </section>
     </div>
@@ -461,6 +592,7 @@
 
   <script>
     const $ = (id) => document.getElementById(id);
+
     const setStatus = (txt) => {
       $("statusText").textContent = txt;
       const banner = $("bannerStatus");
@@ -473,18 +605,30 @@
 
     function safeUrl(u){ try { new URL(u); return true; } catch { return false; } }
 
-    function ynText(val){
-      if(val === true) return {txt:"Yes", cls:"good"};
-      if(val === false) return {txt:"No", cls:"bad"};
-      return {txt:"—", cls:""};
-    }
-
     function setYesNo(el, val){
-      const {txt} = ynText(val);
+      const txt = (val === true) ? "Yes" : (val === false) ? "No" : "—";
       el.textContent = txt;
       el.style.fontWeight = "900";
       el.style.color = (txt === "Yes") ? "var(--good)" : (txt === "No") ? "var(--bad)" : "var(--muted)";
     }
+
+    // Toggle outcome blocks based on selection boxes
+    function applyOutputVisibility(){
+      $("blkYesNo").style.display = $("oYesNo").checked ? "" : "none";
+      $("blkLinks").style.display = $("oLinks").checked ? "" : "none";
+      $("blkComponents").style.display = $("oComponents").checked ? "" : "none";
+      $("blkPostman").style.display = $("oPostman").checked ? "" : "none";
+
+      const depth = $("depth").value;
+      $("modeText").textContent =
+        depth === "deep" ? "deep (more pages)" :
+        depth === "pdf_only" ? "pdf only" :
+        depth === "links_only" ? "links only" :
+        "normal (fast)";
+    }
+    ["oYesNo","oLinks","oComponents","oPostman","depth"].forEach(id => {
+      $(id).addEventListener("change", applyOutputVisibility);
+    });
 
     // PDF UX
     const dropZone = $("dropZone");
@@ -494,8 +638,7 @@
 
     function updatePdfMeta(){
       const f = pdfFile.files && pdfFile.files[0];
-      if(!f){ pdfMeta.textContent = "No file selected."; return; }
-      pdfMeta.textContent = `Selected: ${f.name} (${Math.round(f.size/1024)} KB)`;
+      pdfMeta.textContent = !f ? "No file selected." : `Selected: ${f.name} (${Math.round(f.size/1024)} KB)`;
     }
 
     choosePdfBtn.addEventListener("click", () => pdfFile.click());
@@ -520,14 +663,29 @@
     });
 
     // Persistence
-    const STORAGE_KEY = "vat_platform_validator_bedsizes_style_v1";
+    const STORAGE_KEY = "vat_platform_validator_bedsizes_style_v2";
     function saveForm(){
       const data = {
         country: $("country").value,
         platform: $("platform").value,
         devSite: $("devSite").value,
         docsUrl: $("docsUrl").value,
-        notes: $("notes").value
+        notes: $("notes").value,
+
+        targets: {
+          tVat: $("tVat").checked,
+          tB2b: $("tB2b").checked,
+          tInvoice: $("tInvoice").checked,
+          tTaxLogic: $("tTaxLogic").checked,
+          tExamples: $("tExamples").checked,
+        },
+        outputs: {
+          oYesNo: $("oYesNo").checked,
+          oLinks: $("oLinks").checked,
+          oComponents: $("oComponents").checked,
+          oPostman: $("oPostman").checked,
+        },
+        depth: $("depth").value
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
@@ -541,13 +699,31 @@
         $("devSite").value = d.devSite || "";
         $("docsUrl").value = d.docsUrl || "";
         $("notes").value = d.notes || "";
+        if(d.targets){
+          $("tVat").checked = !!d.targets.tVat;
+          $("tB2b").checked = !!d.targets.tB2b;
+          $("tInvoice").checked = !!d.targets.tInvoice;
+          $("tTaxLogic").checked = !!d.targets.tTaxLogic;
+          $("tExamples").checked = !!d.targets.tExamples;
+        }
+        if(d.outputs){
+          $("oYesNo").checked = !!d.outputs.oYesNo;
+          $("oLinks").checked = !!d.outputs.oLinks;
+          $("oComponents").checked = !!d.outputs.oComponents;
+          $("oPostman").checked = !!d.outputs.oPostman;
+        }
+        $("depth").value = d.depth || "normal";
       }catch{}
     }
-    ["country","platform","devSite","docsUrl","notes"].forEach(id => {
+
+    [
+      "country","platform","devSite","docsUrl","notes",
+      "tVat","tB2b","tInvoice","tTaxLogic","tExamples",
+      "oYesNo","oLinks","oComponents","oPostman","depth"
+    ].forEach(id => {
       $(id).addEventListener("input", saveForm);
       $(id).addEventListener("change", saveForm);
     });
-    loadForm();
 
     // Results rendering
     function clearResults(){
@@ -655,6 +831,25 @@
       }
     }
 
+    // Collect selected fields
+    function getSelectedTargets(){
+      const out = [];
+      if($("tVat").checked) out.push("vat_capture");
+      if($("tB2b").checked) out.push("b2b_flag");
+      if($("tInvoice").checked) out.push("invoice_billing_model");
+      if($("tTaxLogic").checked) out.push("tax_logic");
+      if($("tExamples").checked) out.push("examples_payloads");
+      return out;
+    }
+    function getSelectedOutputs(){
+      const out = [];
+      if($("oYesNo").checked) out.push("yes_no");
+      if($("oLinks").checked) out.push("links");
+      if($("oComponents").checked) out.push("api_components");
+      if($("oPostman").checked) out.push("postman");
+      return out;
+    }
+
     // Run
     const runBtn = $("runBtn");
     const resetBtn = $("resetBtn");
@@ -670,6 +865,7 @@
       localStorage.removeItem(STORAGE_KEY);
       clearResults();
       setStatus("idle");
+      applyOutputVisibility();
     });
 
     runBtn.addEventListener("click", async () => {
@@ -687,9 +883,23 @@
       if(devSite && !safeUrl(devSite)) { alert("Developer site URL is invalid."); return; }
       if(docsUrl && !safeUrl(docsUrl)) { alert("Docs URL is invalid."); return; }
 
+      const targets = getSelectedTargets();
+      const outputs = getSelectedOutputs();
+      const depth = $("depth").value;
+
+      if(targets.length === 0){
+        alert("Select at least one validation target.");
+        return;
+      }
+      if(outputs.length === 0){
+        alert("Select at least one outcome block.");
+        return;
+      }
+
       runBtn.disabled = true;
       setStatus("running");
       clearResults();
+      applyOutputVisibility();
 
       try{
         const fd = new FormData();
@@ -700,8 +910,11 @@
         if(notes) fd.append("notes", notes);
         if(pdf) fd.append("pdf", pdf);
 
-        // If your API is on another host/port, replace with absolute URL:
-        // const resp = await fetch("http://localhost:8000/api/analyze", { ... })
+        // new: selection boxes
+        targets.forEach(t => fd.append("targets[]", t));
+        outputs.forEach(o => fd.append("outputs[]", o));
+        fd.append("depth", depth);
+
         const resp = await fetch("/api/analyze", { method: "POST", body: fd });
 
         if(!resp.ok){
@@ -718,17 +931,18 @@
         $("summaryText").textContent =
           "Run failed. Check console + backend logs. " +
           (err?.message ? `(${err.message})` : "");
-        const badge = $("confidenceBadge");
-        badge.classList.remove("accent","good","warn");
-        badge.classList.add("bad");
+        $("confidenceBadge").classList.remove("accent","good","warn");
+        $("confidenceBadge").classList.add("bad");
       }finally{
         runBtn.disabled = false;
       }
     });
 
     // init
+    loadForm();
     updatePdfMeta();
     clearResults();
+    applyOutputVisibility();
     setStatus("idle");
   </script>
 </body>
